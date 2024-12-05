@@ -8,6 +8,7 @@ public class NPC : MonoBehaviour
     private Outline outline;
     [SerializeField] private Texture2D cursorInteraccion;
     [SerializeField] private Texture2D cursorPorDefecto;
+    [SerializeField] private DialogoSO dialogo;
 
     [SerializeField] private float tiempoRotacion;
     // Start is called before the first frame update
@@ -16,16 +17,6 @@ public class NPC : MonoBehaviour
     {
         outline = GetComponent<Outline>();
 
-    }
-
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
     private void OnMouseEnter()
     {
@@ -42,6 +33,7 @@ public class NPC : MonoBehaviour
     public void Interactuar(Transform interactuador)
     {
         Debug.Log("Holaaaaaaaaaaaaa");
-        transform.DOLookAt(interactuador.position, tiempoRotacion, AxisConstraint.X, Vector3.up);
-    }
+        transform.DOLookAt(interactuador.position, tiempoRotacion, AxisConstraint.Y).OnComplete(() => SistemaDialogo.sistema.IniciarDialogo(dialogo));
+    }   
 }
+
