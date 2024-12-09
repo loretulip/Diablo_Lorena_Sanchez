@@ -23,10 +23,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Movimiento();
+        if (Time.timeScale >= 1)
+        {
+            Movimiento();
+        }
 
         // Si existe u npc al cual cliqué
-        if(ultimoClick&&ultimoClick.TryGetComponent(out NPC npc))
+        if (ultimoClick&&ultimoClick.TryGetComponent(out NPC npc))
         {
             agent.stoppingDistance = distanciaInteraccion;
             // Comprobar si he llegado al NPC
@@ -46,6 +49,7 @@ public class Player : MonoBehaviour
     {
         // Trazar un raycast desde la cámara a la posición del ratón
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        
         if (Physics.Raycast(ray, out RaycastHit hit)) // Eliminar el punto y coma aquí
         {
             if (Input.GetMouseButtonDown(0))
