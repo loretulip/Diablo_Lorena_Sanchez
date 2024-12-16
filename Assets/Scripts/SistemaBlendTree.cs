@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerVisual : MonoBehaviour
+public class SistemaBlendTree : MonoBehaviour
 {
     private Animator anim;
     [SerializeField] private NavMeshAgent agent;
