@@ -7,7 +7,9 @@ public class SistemaPatrulla : MonoBehaviour
 {
     [SerializeField] private Transform ruta;
 
-    private NavMeshAgent agent;
+    [SerializeField] private Enemigo main;
+
+    [SerializeField] private NavMeshAgent agent;
 
     List<Vector3> listadoPuntos = new List<Vector3>();
 
@@ -22,9 +24,13 @@ public class SistemaPatrulla : MonoBehaviour
             // y los añado a mi lista.
             listadoPuntos.Add(punto.position);
         }
+        main.Patrulla = this;
+
     }
-    void Start()
+    private void Start()
     {
+        //Comunico al main que el sistema de patrulla soy yo
+        
         StartCoroutine(PatrullarYEsperar());
     }
 
@@ -55,6 +61,10 @@ public class SistemaPatrulla : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-
+        if (other.transform.CompareTag("Player")) // Si lo que se ha metido en el trigger es el player
+        {
+            main.ActivaCombate(other.transform); //Deshabilito patrulla
+            StopAllCoroutines(); //Paro corrutinas
+        }
     }
 }
