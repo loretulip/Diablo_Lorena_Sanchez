@@ -11,11 +11,14 @@ public class SistemaPatrulla : MonoBehaviour
 
     [SerializeField] private NavMeshAgent agent;
 
+    [SerializeField] private float velocidadPatrulla;
+
     List<Vector3> listadoPuntos = new List<Vector3>();
 
     private Vector3 destinoActual; // Marca el destino al cual tenemos que ir.
 
-    private int indiceRutaActual=-1; // Marca el índice del nuevo punto para patrullar
+    private int indiceDestinoActual=-1; // Marca el índice del nuevo punto para patrullar
+
     private void Awake()
     {
         // Voy recorriendo todos los puntos de mi ruta...
@@ -29,9 +32,15 @@ public class SistemaPatrulla : MonoBehaviour
     }
     private void Start()
     {
+       
+    }
+    private void OnEnable()
+    {
         //Comunico al main que el sistema de patrulla soy yo
-        
+
         StartCoroutine(PatrullarYEsperar());
+        indiceDestinoActual = -1;
+        agent.speed = velocidadPatrulla;
     }
 
     private IEnumerator PatrullarYEsperar()
@@ -50,14 +59,14 @@ public class SistemaPatrulla : MonoBehaviour
     }
     private void CalcularDestino()
     {
-        indiceRutaActual++;
+        indiceDestinoActual++;
         // Count para las listas: Es lo mismo que Length en los arrays.
-        if (indiceRutaActual >= listadoPuntos.Count)
+        if (indiceDestinoActual >= listadoPuntos.Count)
         {
             // Si no me quedan puntos volveré al punto 0
-            indiceRutaActual = 0;
+            indiceDestinoActual = 0;
         }
-        destinoActual = listadoPuntos[indiceRutaActual];
+        destinoActual = listadoPuntos[indiceDestinoActual];
     }
     private void OnTriggerEnter(Collider other)
     {
