@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cofre : MonoBehaviour
+public class Cofre : MonoBehaviour, IInteractuable
 {
     private Outline outline;
     [SerializeField] private Texture2D cursorInteraccion;
@@ -16,6 +16,10 @@ public class Cofre : MonoBehaviour
     }
     void Start()
     {
+    }
+    public void Interactuar()
+    {
+
     }
 
     // Update is called once per frame
@@ -33,5 +37,10 @@ public class Cofre : MonoBehaviour
     {
         Cursor.SetCursor(cursorPorDefecto, Vector2.zero, CursorMode.Auto);
         outline.enabled = false;
+    }
+
+    public void Interactuar(Transform interactuador)
+    {
+
     }
 }

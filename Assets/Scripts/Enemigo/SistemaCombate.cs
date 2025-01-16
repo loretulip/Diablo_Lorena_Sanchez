@@ -8,9 +8,10 @@ public class SistemaCombate : MonoBehaviour
     // Awake vs OnEnable vs Start
     [SerializeField] private Enemigo main;
     [SerializeField] private float velocidadCombate;
+    [SerializeField] private float danhoAtaque;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private float distanciaAtaque;
-    private Animator anim;
+    [SerializeField] private Animator anim;
 
 
     // Start is called before the first frame update
@@ -41,7 +42,7 @@ public class SistemaCombate : MonoBehaviour
             // Voy persiguiendo al target en todo momento (calculando su posición)
             agent.SetDestination(main.MainTarget.position);
 
-            if (agent.remainingDistance > distanciaAtaque)
+            if (agent.pathPending && agent.remainingDistance > distanciaAtaque)
             {
                 anim.SetBool("attacking", true);
             }
@@ -59,6 +60,15 @@ public class SistemaCombate : MonoBehaviour
         Quaternion rotacionATarget = Quaternion.LookRotation(direccionATarget);
         transform.rotation = rotacionATarget;
     }
-
+    #region Ejecutados por eventos de animación
+    private void FinAnimacionAtaque()
+    {
+        anim.SetBool("attacking", false);
+    }
+    private void Atacar()
+    {
+        main.MainTarget.GetComponent<Player>().HacerDanho(danhoAtaque);
+    }
+    #endregion
 
 }

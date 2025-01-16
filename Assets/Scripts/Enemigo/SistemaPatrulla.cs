@@ -39,8 +39,9 @@ public class SistemaPatrulla : MonoBehaviour
         //Comunico al main que el sistema de patrulla soy yo
 
         StartCoroutine(PatrullarYEsperar());
-        indiceDestinoActual = -1;
+        //indiceDestinoActual = -1;
         agent.speed = velocidadPatrulla;
+        agent.stoppingDistance = 0;
     }
 
     private IEnumerator PatrullarYEsperar()

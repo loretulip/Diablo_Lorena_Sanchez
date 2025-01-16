@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,14 +32,14 @@ public class Player : MonoBehaviour
         }
 
         // Si existe u npc al cual cliqué
-        if (ultimoClick&&ultimoClick.TryGetComponent(out NPC npc))
+        if (ultimoClick&&ultimoClick.TryGetComponent(out IInteractuable interactuable))
         {
             agent.stoppingDistance = distanciaInteraccion;
             // Comprobar si he llegado al NPC
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 //transform.DOLookAt(npc.transform.position, tiempoRotacion, AxisConstraint.Y).OnComplete(() => LanzarInteraccion(npc));
-                LanzarInteraccion(npc);
+                LanzarInteraccion(interactuable);
             }
         }
         else if(ultimoClick)
@@ -61,10 +62,14 @@ public class Player : MonoBehaviour
             }
         }
     }
-    private void LanzarInteraccion(NPC npc)
+    private void LanzarInteraccion(IInteractuable interactuable)
     {
-        npc.Interactuar(this.transform);
+        interactuable.Interactuar();
         ultimoClick = null;
     }
-    
+   
+    public void HacerDanho(float danhoAtaque)
+    {
+        Debug.Log("Me hacen " + danhoAtaque + " de daño.");
+    }
 }
