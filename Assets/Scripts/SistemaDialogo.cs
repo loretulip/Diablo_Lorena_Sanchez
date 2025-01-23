@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class SistemaDialogo : MonoBehaviour
+public class SistemaDialogo : MonoBehaviour, IInteractuable
 {
     // Patrón single-ton:
     // Asegurarte que sea la unica instancia de "SistemaDialogo"
     // Asegura que esa instancia sea accesible desde cualquier punto del programa
 
     // 
+    [SerializeField] private EventManagerSO eventManager;
 
-    [SerializeField] private GameObject marcos;
+    [SerializeField] private GameObject marcoDialogo;
+
     [SerializeField] private TMP_Text textoDialogo;
+
     [SerializeField] private Transform npcCamera;
 
     private bool escribiendo;
@@ -20,15 +23,15 @@ public class SistemaDialogo : MonoBehaviour
     private DialogoSO dialogoActual;
 
 
-    public static SistemaDialogo sistema;
+    public static SistemaDialogo sD;
     // Start is called before the first frame update
     void Start()
     {
         // Si el trono está vacío
-        if (sistema==null)
+        if (sD==null)
         {
             // reclamo el trono y me lo quedo
-            sistema = this;
+            sD = this;
         }
         else
         {
@@ -44,7 +47,7 @@ public class SistemaDialogo : MonoBehaviour
      
         // El diálogo actual con el que trabajamos, es el que me dan por parámetro de entrada.
         dialogoActual = dialogo;
-        marcos.SetActive(true);
+        marcoDialogo.SetActive(true);
         StartCoroutine (EscribirFrase());
     }
     public void SiguienteFrase()
@@ -76,15 +79,21 @@ public class SistemaDialogo : MonoBehaviour
     }
     private void TerminarDialogo()
     {
-        marcos.SetActive(false);
-        StopAllCoroutines();
+        Time.timeScale = 1f;
+        marcoDialogo.SetActive(false);
         indiceFraseActual = 0; // Para posteriores diálogos
         escribiendo = false;
+        StopAllCoroutines();
+
+        if(dialogoActual.tieneMision)
+        {
+            eventManager.NuevaMision();
+        }
         dialogoActual = null;
-        Time.timeScale = 1f;
-        
-    } 
-    
+
+
+    }
+
     private IEnumerator EscribirFrase()
     {
         escribiendo = true;
@@ -96,6 +105,10 @@ public class SistemaDialogo : MonoBehaviour
             yield return new WaitForSecondsRealtime(dialogoActual.tiempoEntreLetras);
         }
         escribiendo = false;
-    }   
+    }
 
+    public void Interactuar(Transform interactuador)
+    {
+        throw new System.NotImplementedException();
+    }
 }
