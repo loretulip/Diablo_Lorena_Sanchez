@@ -18,4 +18,4 @@ MonoBehaviour:
     en ti."
   tiempoEntreLetras: 0.02
   tieneMision: 1
-  textoMision: Consigue setas de la muerte (0/3)
+  mision: {fileID: 11400000, guid: 5da02202d0d9cc94498eee4135ab98b5, type: 2}

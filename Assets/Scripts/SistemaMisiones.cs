@@ -8,7 +8,8 @@ public class SistemaMisiones : MonoBehaviour
     private EventManagerSO eventManager;
 
     [SerializeField]
-    private GameObject toggleMision;
+    private ToggleMision[] toggleMision;
+
     void Start()
     {
         
@@ -18,10 +19,31 @@ public class SistemaMisiones : MonoBehaviour
     private void OnEnable()
     {
         eventManager.OnNuevaMision += ActivarToggleMision;
+        eventManager.OnActualizarMision += ActualizarToggle;
+        eventManager.OnTerminarMision += CerrarToggle;
     }
 
-    private void ActivarToggleMision()
+    
+
+    private void ActivarToggleMision(MisionSO mision)
     {
-        toggleMision.SetActive(true);
+        toggleMision[mision.indiceMision].TextoMision.text = mision.ordenFinal;
+
+        if(mision.repetir)
+        {
+            toggleMision[mision.indiceMision].TextoMision.text += "(" + mision.estadoActual + "/" + mision.repeticionesTotales + ")";
+        }
+
+        toggleMision[mision.indiceMision].gameObject.SetActive(true);
+    }
+    private void ActualizarToggle(MisionSO mision)
+    {
+
+    }
+    private void CerrarToggle(MisionSO mision)
+    {
+        // El toggle sale como check
+        toggleMision[mision.indiceMision].Toggle.isOn = true;
+        toggleMision[mision.indiceMision].TextoMision.text = mision.ordenFinal;
     }
 }

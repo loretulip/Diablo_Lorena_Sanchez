@@ -87,7 +87,8 @@ public class SistemaDialogo : MonoBehaviour, IInteractuable
 
         if(dialogoActual.tieneMision)
         {
-            eventManager.NuevaMision();
+            // Comunico al Event Manager que hay una mision en este diálogo
+            eventManager.NuevaMision(dialogoActual.mision);
         }
         dialogoActual = null;
 
