@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// "Genera notificaciones"
+
 [CreateAssetMenu(menuName = "Event manager")]
 public class EventManagerSO : ScriptableObject
 {

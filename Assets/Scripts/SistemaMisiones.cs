@@ -38,7 +38,9 @@ public class SistemaMisiones : MonoBehaviour
     }
     private void ActualizarToggle(MisionSO mision)
     {
-
+        // Actualiza el texto de la misión correspondiente
+        toggleMision[mision.indiceMision].TextoMision.text = mision.ordenFinal;
+        toggleMision[mision.indiceMision].TextoMision.text += "(" + mision.estadoActual + "/" + mision.repeticionesTotales + ")";
     }
     private void CerrarToggle(MisionSO mision)
     {

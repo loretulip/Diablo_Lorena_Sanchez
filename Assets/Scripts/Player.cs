@@ -4,9 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    
+
+    [Header("Jugador")]
+
     [SerializeField] private float distanciaInteraccion;
     [SerializeField] private float distanciaAtaque;
     [SerializeField] private Animator anim;
@@ -21,7 +26,7 @@ public class Player : MonoBehaviour
     private Transform ultimoClick;
 
     public PlayerAnimations PlayerAnimations { get => playerAnimations; set => playerAnimations = value; }
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -84,5 +89,7 @@ public class Player : MonoBehaviour
     public void HacerDanho(float danhoAtaque)
     {
         Debug.Log("Me hacen " + danhoAtaque + " de daño.");
+
     }
+    
 }

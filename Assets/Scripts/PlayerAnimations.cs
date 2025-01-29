@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class PlayerAnimations : MonoBehaviour
 {
+    
+
+    [Header("Animacion")]
+
     [SerializeField] 
     private Player main;
 
     private Animator anim;
 
+    [Header("Musica de Efectos")]
+    [SerializeField] AudioClip[] sonidoPasos;
+    private AudioSource efectoSource;
     private void Awake()
     {
         anim = GetComponent<Animator>();
         //main = PlayerAnimations this;
+        efectoSource = gameObject.AddComponent<AudioSource>();
+
     }
     void Start()
     {
@@ -32,5 +41,13 @@ public class PlayerAnimations : MonoBehaviour
     {
         anim.SetBool("attacking", false);
 
+    }
+    public void ReproducirPasos()
+    {
+        if (sonidoPasos.Length > 0)
+        {
+            AudioClip randomClip = sonidoPasos[UnityEngine.Random.Range(0, sonidoPasos.Length)];
+            efectoSource.PlayOneShot(randomClip);
+        }
     }
 }

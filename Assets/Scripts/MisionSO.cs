@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,8 @@ public class MisionSO : ScriptableObject
     // En el caso de que se repitan
     public int repeticionesTotales;
 
-    public int estadoActual; // Variable que marca dónde estás, si tienes 1,2,3 setas...
+    [NonSerialized] // Para que se pueda resetear la variable entre partidas
+    public int estadoActual = 0; // Variable que marca dónde estás, si tienes 1,2,3 setas...
 
     public int indiceMision; // Listado de misiones, es el identificador único para las misiones
 }
