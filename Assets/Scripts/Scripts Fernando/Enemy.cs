@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour, IDanhable
 
 
     [SerializeField] 
-    private LocalCanvas localCanvas;
+    private GameObject localCanvas;
 
     [SerializeField]
     private Image healthBar;
@@ -84,5 +84,9 @@ public class Enemy : MonoBehaviour, IDanhable
     private void OnMouseExit()
     {
         outline.enabled = false;
+    }
+    public void TakeDamage(int damage)
+    {
+        RecibirDanho(damage);
     }
 }

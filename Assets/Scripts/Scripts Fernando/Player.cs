@@ -1,73 +1,93 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class Player : MonoBehaviour, IDanhable
 {
-    [SerializeField] private float vidas = 200;
-    [SerializeField] private float interactionDistance = 2f;
-    [SerializeField] private float attackingDistance = 2f;
-    [SerializeField] private float danhoAtaque = 10f;
-
-    private int totalCoins;
     private NavMeshAgent agent;
     private Camera cam;
+
+    private Transform ultimoClick;//guardo la info del npc actual con el que quiero hablar
+
+    [SerializeField] private float distanciaInteraccion = 2f;
+    [SerializeField] private float attackingDistance = 2f;
+    [SerializeField] private float tiempoRotacion;
+    [SerializeField] private Animator anim;
+
+    [SerializeField] private float vida;
+
+    //ESTE ES EL DANHO DEL JUGADOR
+    [SerializeField] private int danhoAtaque;
+
+    private PlayerAnimations playerAnimations;
+
+
+    //NUEVAS COSAS
     private Transform lastHit;
-
     private Transform currentTarget;
-    private PlayerVisualSystem visualSystem;
+    [SerializeField] private PlayerVisualSystem visualSystem;
+    [SerializeField] private float interactionDistance = 2f;
 
-    public PlayerVisualSystem VisualSystem { get => visualSystem; set => visualSystem = value; }
-    public int TotalCoins { get => totalCoins; set => totalCoins = value; }
+    private bool vivo = true;
+    public PlayerAnimations PlayerAnimations { get => playerAnimations; set => playerAnimations = value; }
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = Camera.main;
         agent = GetComponent<NavMeshAgent>();
+        cam = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (vivo)
         {
-            if(Input.GetMouseButtonDown(0) && Time.timeScale != 0) //Porque si no, "recuerda" hits hechos en pausa.
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                agent.SetDestination(hit.point);
-                lastHit = hit.transform;
-            }
-        }
-
-        if(lastHit)
-        {
-            visualSystem.StopAttacking();
-
-            if (lastHit.TryGetComponent(out IInteractuable interactable))
-            {
-                agent.stoppingDistance = interactionDistance;
-                if(!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+                if (Input.GetMouseButtonDown(0) && Time.timeScale != 0) //Porque si no, "recuerda" hits hechos en pausa.
                 {
-                    interactable.Interactuar(transform);
-                    lastHit = null; //Para que no siga interactuando
+                    agent.SetDestination(hit.point);
+                    lastHit = hit.transform;
                 }
             }
-            else if(lastHit.TryGetComponent(out IDanhable _))
+
+            if (lastHit)
             {
-                currentTarget = lastHit;
-                agent.stoppingDistance = attackingDistance;
-                if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+
+                visualSystem.StopAttacking();
+
+                if (lastHit.TryGetComponent(out IInteractuable interactable))
                 {
-                    FaceTarget();
-                    visualSystem.StartAttacking();
+                    agent.stoppingDistance = interactionDistance;
+                    if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+                    {
+                        interactable.Interactuar(transform);
+                        lastHit = null; //Para que no siga interactuando
+                    }
                 }
-            }
-            else
-            {
-                agent.stoppingDistance = 0f;
+                else if (lastHit.TryGetComponent(out IDanhable _))
+                {
+                    currentTarget = lastHit;
+                    agent.stoppingDistance = attackingDistance;
+                    if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+                    {
+                        FaceTarget();
+                        visualSystem.StartAttacking();
+                    }
+                }
+                else
+                {
+                    agent.stoppingDistance = 0f;
+                }
             }
         }
 
@@ -81,33 +101,65 @@ public class Player : MonoBehaviour, IDanhable
         transform.rotation = rotationToTarget;
     }
 
+    private void LanzarInteraccion(IInteractuable interactuable)
+    {
+        interactuable.Interactuar(transform);
+        ultimoClick = null;
+    }
+
+    private void Movimiento()
+    {
+
+        //trazar un raycast desde lacam a la posicion del raton
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                //mirar si el pto de inpacto tiene el script npc
+
+
+                agent.SetDestination(hit.point); //directo al punto del impacto
+
+
+                ultimoClick = hit.transform;
+
+            }
+        }
+    }
+
     public void Atacar()
     {
         currentTarget.GetComponent<IDanhable>().RecibirDanho(danhoAtaque);
+        Debug.Log("Auch!");
     }
 
-    public void RecibirDanho(float danho)
-    {
-        vidas -= danho;
-        if(vidas <= 0)
-        {
-            Destroy(this);
-            visualSystem.EjecutarAnimacionMuerte();
-        }
-    }
-    public void TakeDamage(int amount)
-    {
-        vidas -= amount;
-        Debug.Log("Jugador recibió daño, vida restante: " + vidas);
 
-        if (vidas <= 0)
+    public void RecibirDanho(int danho)
+    {
+        vida -= danho;
+        if (vida <= 0)
         {
-            Die();
+            Muerte();
+            vida = 0;
         }
     }
-    private void Die()
+
+    public void Muerte()
     {
-        Debug.Log("El jugador ha muerto.");
-        // Aquí puedes agregar más lógica como reiniciar el nivel o mostrar una pantalla de game over.
+        vivo = !vivo;
+        //Destroy(this);
+        visualSystem.EjecutarAnimacionMuerte();
+        Debug.Log("Muerte Player");
+        Invoke("EscenaMuerte", 2);
+
     }
+
+    private void EscenaMuerte()
+    {
+        SceneManager.LoadScene(4);
+    }
+
+
 }
+

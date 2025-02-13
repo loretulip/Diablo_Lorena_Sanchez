@@ -6,20 +6,17 @@ using UnityEngine.UI;
 
 public class ToggleMision : MonoBehaviour
 {
+
     [SerializeField]
-    private TMP_Text textoMision; // Recipiente donde meter los textos de cada misión
+    private TMP_Text textoMision;
 
     private Toggle toggle;
 
-    public TMP_Text TextoMision { get => textoMision; set => textoMision = value; }
     public Toggle Toggle { get => toggle; set => toggle = value; }
+    public TMP_Text TextoMision { get => textoMision; set => textoMision = value; }
 
-    void Start()
-    {
-        
-    }
 
-    void Update()
+    private void Awake()
     {
         toggle = GetComponent<Toggle>();
     }

@@ -5,8 +5,19 @@ using UnityEngine;
 public class Cofre : MonoBehaviour, IInteractuable
 {
     private Outline outline;
+
     [SerializeField] private Texture2D cursorInteraccion;
     [SerializeField] private Texture2D cursorPorDefecto;
+
+    public void Interactuar()
+    {
+
+    }
+
+    public void Interactuar(Transform interactuador)
+    {
+
+    }
 
     // Start is called before the first frame update
 
@@ -14,33 +25,17 @@ public class Cofre : MonoBehaviour, IInteractuable
     {
         outline = GetComponent<Outline>();
     }
-    void Start()
-    {
-    }
-    public void Interactuar()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnMouseEnter()
     {
-        Cursor.SetCursor(cursorInteraccion, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(cursorInteraccion, new Vector2(0, 0), CursorMode.Auto);
         outline.enabled = true;
     }
+
     private void OnMouseExit()
     {
-        Cursor.SetCursor(cursorPorDefecto, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(cursorPorDefecto, new Vector2(0, 0), CursorMode.Auto);
+
         outline.enabled = false;
-    }
-
-    public void Interactuar(Transform interactuador)
-    {
-
     }
 }

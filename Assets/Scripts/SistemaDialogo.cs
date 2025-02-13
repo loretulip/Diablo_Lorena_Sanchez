@@ -10,6 +10,8 @@ public class SistemaDialogo : MonoBehaviour, IInteractuable
     // Asegura que esa instancia sea accesible desde cualquier punto del programa
 
     // 
+    public static SistemaDialogo sistema; 
+
     [SerializeField] private EventManagerSO eventManager;
 
     [SerializeField] private GameObject marcoDialogo;

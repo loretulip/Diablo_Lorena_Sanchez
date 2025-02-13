@@ -2,28 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Seta : MonoBehaviour, Interactuable
+public class seta : MonoBehaviour, IInteractuable
 {
-    private Outline outline;
-    [SerializeField] private EventManagerSO eventManager;
+    [SerializeField]
+    private EventManagerSO eventManager;
 
-    [SerializeField] private MisionSO misionAsociada;
+    [SerializeField]
+    private MisionSO misionAsociada;
+
+    private Outline outline;
 
     public void Interactuar(Transform interactuador)
     {
-        misionAsociada.estadoActual++; // Estamos a un paso más de completar la misión
-        if(misionAsociada.estadoActual<misionAsociada.repeticionesTotales)
+        misionAsociada.estadoActual++; //a un paso mas de completar la mision
+        if (misionAsociada.estadoActual < misionAsociada.repeticionesTotales)
         {
             eventManager.ActualizarMision(misionAsociada);
         }
         else
         {
-            eventManager.TerminaMision(misionAsociada);
+            eventManager.TerminarMision(misionAsociada);
         }
 
-        eventManager.ActualizarMision(misionAsociada);
         Destroy(this.gameObject);
     }
+
     private void Awake()
     {
         outline = GetComponent<Outline>();
@@ -32,10 +35,9 @@ public class Seta : MonoBehaviour, Interactuable
     {
         outline.enabled = true;
     }
+
     private void OnMouseExit()
     {
         outline.enabled = false;
-
     }
 }
-

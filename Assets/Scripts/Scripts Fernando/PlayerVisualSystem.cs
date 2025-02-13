@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class PlayerVisualSystem : MonoBehaviour
 {
-    [SerializeField] private GameManagerSO gM;
+    //[SerializeField] private GameManagerSO gM;
     [SerializeField] private int visualId;
     [SerializeField] private Player mainScript;
     [SerializeField] private NavMeshAgent agent;
@@ -14,20 +14,12 @@ public class PlayerVisualSystem : MonoBehaviour
     private Animator anim;
     private void Awake()
     {
-        if(gM.IdCharacterSelected == visualId)
-        {
-            anim = GetComponent<Animator>();
-            mainScript.VisualSystem = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        anim = GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

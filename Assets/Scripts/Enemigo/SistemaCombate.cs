@@ -5,70 +5,74 @@ using UnityEngine.AI;
 
 public class SistemaCombate : MonoBehaviour
 {
-    // Awake vs OnEnable vs Start
     [SerializeField] private Enemigo main;
     [SerializeField] private float velocidadCombate;
-    [SerializeField] private float danhoAtaque;
+    [SerializeField] private float distanciaCombate;
+    [SerializeField] private int danhoCombate;
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private float distanciaAtaque;
     [SerializeField] private Animator anim;
 
 
-    // Start is called before the first frame update
 
-    //Define una vel de combate
-    //Ref al navmeshagent con el que nos vamos a mover
-    //marca como destino constantemente(update) al target. definido en main
-    private void Awake()
+    // awake vs OnEnabled vs Start VIP TEST
+    void Awake()
     {
-        main.Combate = this;       
+        main.Combate = this;
+
     }
+
     private void OnEnable()
     {
         agent.speed = velocidadCombate;
-        agent.stoppingDistance = distanciaAtaque;
+        agent.stoppingDistance = distanciaCombate;
     }
+
+
+
     void Start()
     {
+
     }
 
     // Update is called once per frame
-     void Update()
+    void Update()
     {
-        // Si exite un main target y ese target es alcanzable
-        if(main.MainTarget !=null && agent.CalculatePath(main.MainTarget.position,new NavMeshPath()))
+        if (main.MainTarget != null && agent.CalculatePath(main.MainTarget.position, new NavMeshPath()))
         {
-            EnfocarObjetivo();
-            // Voy persiguiendo al target en todo momento (calculando su posición)
+            //EnfocarObjetivo();
             agent.SetDestination(main.MainTarget.position);
 
-            if (agent.pathPending && agent.remainingDistance > distanciaAtaque)
+            if (agent.remainingDistance <= distanciaCombate)
             {
-                anim.SetBool("attacking", true);
+                agent.isStopped = true;
+
+                //ESTO SE DEBERIA DE HACER POR EVENTO DE ANIMACION
+                //anim.SetBool("attacking", true);
+                Atacar();
+                Debug.Log("ATK Enem");
             }
 
-        }
-        else // Si no es alcanzable...
-        {
-            main.ActivarPatrulla();
+            else
+            {
+                agent.isStopped = false;
+                main.ActivarPatrulla();
+            }
         }
     }
-    private void EnfocarObjetivo()
+
+    #region Ejecutsods por eventos de anim
+    private void Atacar()
     {
-        Vector3 direccionATarget = (main.MainTarget.position - this.transform.position).normalized;
-        direccionATarget.y= 0f;
-        Quaternion rotacionATarget = Quaternion.LookRotation(direccionATarget);
-        transform.rotation = rotacionATarget;
+        main.MainTarget.GetComponent<Player>().RecibirDanho(danhoCombate);
     }
-    #region Ejecutados por eventos de animación
     private void FinAnimacionAtaque()
     {
         anim.SetBool("attacking", false);
+        agent.isStopped = false;
     }
-    private void Atacar()
-    {
-        main.MainTarget.GetComponent<Player>().HacerDanho(danhoAtaque);
-    }
+
+
+
     #endregion
 
 }
