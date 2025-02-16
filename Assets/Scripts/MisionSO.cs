@@ -7,16 +7,15 @@ using UnityEngine;
 
 public class MisionSO : ScriptableObject
 {
-    public string ordenInicial; // EJ.: "Recoge las 3 setas"
-    public string ordenFinal; // Ej.: "Dale las setas a Mauricio"
+    public string ordenInicial; 
+    public string ordenFinal; 
 
-    public bool repetir; // Indica si la misión tiene varios pasos.
+    public bool repetir; 
 
-    // En el caso de que se repitan
     public int repeticionesTotales;
 
-    [NonSerialized] // Para que se pueda resetear la variable entre partidas
-    public int estadoActual = 0; // Variable que marca dónde estás, si tienes 1,2,3 setas...
+    [NonSerialized]
+    public int estadoActual = 0;
 
-    public int indiceMision; // Listado de misiones, es el identificador único para las misiones
+    public int indiceMision; 
 }

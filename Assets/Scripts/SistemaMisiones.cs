@@ -13,7 +13,6 @@ public class SistemaMisiones : MonoBehaviour
 
     private void OnEnable()
     {
-        //PARA UTILIZAR LOS EVENTOS TENEMOS QUE SUSCRIBIRNOS A ELLOS
         eventManager.OnNuevaMision += ActivarToggleMision;
         eventManager.OnActualizarMision += ActualizarToggle;
         eventManager.OnTerminarMision += CerrarToggle;
@@ -43,12 +42,6 @@ public class SistemaMisiones : MonoBehaviour
         toggleMision[mision.indiceMision].TextoMision.text = mision.ordenFinal;
 
     }
-
-
-    //PASOS PARA LOS EVENTOS
-    //1.Creo a alguien que gestione las misiones/eventos del juego.
-    //2.Todos los que esten interesados en las "noticias" o "llamadas" se "suscriben".
-    //3.En cada objeto/clase/etc que este suscrita le anhado el comportamiento especifico que va a seguir.
 
 
 }

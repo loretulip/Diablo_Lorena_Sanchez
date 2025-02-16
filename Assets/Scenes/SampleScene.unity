@@ -26143,10 +26143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 941b306822adff44b88a6e1400cb14c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorCofre: {fileID: 2800000, guid: ce683041f000c7c48b73e8fbda566384, type: 3}
-  cursorPorDefecto: {fileID: 2800000, guid: 51cb6ee928f89b64691ef4dfd57c03e9, type: 3}
   cameraPoint: {fileID: 501353282}
   dialogoCofre: {fileID: 11400000, guid: b3f3d3eece952a2419b3a8c13d41322c, type: 2}
+  cursorCofre: {fileID: 2800000, guid: ce683041f000c7c48b73e8fbda566384, type: 3}
+  cursorPorDefecto: {fileID: 2800000, guid: 51cb6ee928f89b64691ef4dfd57c03e9, type: 3}
 --- !u!114 &1890121411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28413,12 +28413,12 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 4b1205a7235860c479fc94aefe26ebf1,
         type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1890121411}
+      insertIndex: 1
+      addedObject: {fileID: 1890121410}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 4b1205a7235860c479fc94aefe26ebf1,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1890121410}
+      addedObject: {fileID: 1890121411}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 4b1205a7235860c479fc94aefe26ebf1,
         type: 3}
       insertIndex: -1
