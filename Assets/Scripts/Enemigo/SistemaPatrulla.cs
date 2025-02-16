@@ -3,78 +3,82 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SistemaPatrulla : MonoBehaviour
+public class SistemaPatrullla : MonoBehaviour
 {
+    [SerializeField] Enemigo main;
     [SerializeField] private Transform ruta;
-
-    [SerializeField] private Enemigo main;
-
+    private int indiceRutaActual = -1;//Marca el indice del nuevo punto al cual dirigirse y hay que inicializarlo a -1 para que empiece en el cero
     [SerializeField] private NavMeshAgent agent;
-
     [SerializeField] private float velocidadPatrulla;
+    [SerializeField] private float stoppingDistancePatrulla;
+    private Vector3 destinoActual;//Marca el destino al cual tenemos que ir
 
     List<Vector3> listadoPuntos = new List<Vector3>();
 
-    private Vector3 destinoActual; // Marca el destino al cual tenemos que ir.
-
-    private int indiceDestinoActual=-1; // Marca el índice del nuevo punto para patrullar
-
     private void Awake()
     {
-        // Voy recorriendo todos los puntos de mi ruta...
+        main.Patrulla = this;
+        //Voy recorriendo todos los puntos que tiene mi ruta
         foreach (Transform punto in ruta)
         {
-            // y los añado a mi lista.
+            //Y los añado en mi lista
             listadoPuntos.Add(punto.position);
         }
-        main.Patrulla = this;
+    }
 
-    }
-    private void Start()
-    {
-       
-    }
     private void OnEnable()
     {
-        //Comunico al main que el sistema de patrulla soy yo
-
-        StartCoroutine(PatrullarYEsperar());
-        //indiceDestinoActual = -1;
+        //Reiniciamos la ruta
+        indiceRutaActual = -1;
+        //Volvemos a la velocidad de patrulla
         agent.speed = velocidadPatrulla;
-        agent.stoppingDistance = 0;
+        agent.stoppingDistance = stoppingDistancePatrulla;
+        //Y volvemos a activar las corrutinas
+        StartCoroutine(PatrullaryEsperar());
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+
+
     }
 
-    private IEnumerator PatrullarYEsperar()
+    private IEnumerator PatrullaryEsperar()
     {
-        while(true)
+        while (true)
         {
-            CalcularDestino(); // 1. Calculas nuevo destino
-            agent.SetDestination(destinoActual); // 2. Se te marca dicho destino
-
-            // 3. Esperas a llegar a dicho destino y repites
-            yield return new WaitUntil( () => !agent.pathPending && agent.remainingDistance <= 0.2f); //Espera hasta que llegues al siguiente punto
-
-            // 4. Una vez llegado al punto esperamos x tiempo en dicho tiempo
+            CalcularDestino();
+            agent.SetDestination(destinoActual);
+            yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance <= 0.2f); //Espera hasta que llegues a ese punto.
             yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));
         }
     }
+
     private void CalcularDestino()
     {
-        indiceDestinoActual++;
-        // Count para las listas: Es lo mismo que Length en los arrays.
-        if (indiceDestinoActual >= listadoPuntos.Count)
+        indiceRutaActual++;
+        //Count es lo mismo que los length en los arrays
+        if (indiceRutaActual >= listadoPuntos.Count)
         {
-            // Si no me quedan puntos volveré al punto 0
-            indiceDestinoActual = 0;
+            //Si he completado la ruta volvere al punto inicial
+            indiceRutaActual = 0;
         }
-        destinoActual = listadoPuntos[indiceDestinoActual];
+        destinoActual = listadoPuntos[indiceRutaActual];
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.CompareTag("Player")) // Si lo que se ha metido en el trigger es el player
+        //Mirar a ver si lo que entra en mi trigger es el player
+        if (other.CompareTag("Player"))
         {
-            main.ActivaCombate(other.transform); //Deshabilito patrulla
-            StopAllCoroutines(); //Paro corrutinas
+            //Si es asi... Parar todas las corrutinas
+            StopAllCoroutines();
+            main.ActivaCombate(other.transform);
+            //Desactivar ESTE script.
+            this.enabled = false;
+
         }
+
     }
+
 }

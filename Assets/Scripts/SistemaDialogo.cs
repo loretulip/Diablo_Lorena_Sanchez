@@ -1,39 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class SistemaDialogo : MonoBehaviour, IInteractuable
+public class SistemaDialogo : MonoBehaviour
 {
-    // Patrón single-ton:
-    // Asegurarte que sea la unica instancia de "SistemaDialogo"
-    // Asegura que esa instancia sea accesible desde cualquier punto del programa
-
-    // 
-    public static SistemaDialogo sistema; 
-
+    [SerializeField] private GameObject marcos;
+    [SerializeField] private TMP_Text textoDialogo;
+    [SerializeField] private Transform npcCamera;
     [SerializeField] private EventManagerSO eventManager;
 
-    [SerializeField] private GameObject marcoDialogo;
+    private bool escribiendo;//Determina si el sistema esta escribiendo o no
+    private int indiceFraseActual;//Marca la frase por la que voy
 
-    [SerializeField] private TMP_Text textoDialogo;
+    private DialogoSO dialogoActual;//Para almacenar con que dialogo estamos
 
-    [SerializeField] private Transform npcCamera;
+    public static SistemaDialogo dialogo;
 
-    private bool escribiendo;
-    private int indiceFraseActual;
-    private DialogoSO dialogoActual;
-
-
-    public static SistemaDialogo sD;
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        // Si el trono está vacío
-        if (sD==null)
+        //Si el dialogo esta vacio...
+        if (dialogo == null)
         {
-            // reclamo el trono y me lo quedo
-            sD = this;
+            //Reclamo ese espacio para sacar mi dialogo
+            dialogo = this;
+            //Y no me destruyo entre escenas
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -45,73 +38,70 @@ public class SistemaDialogo : MonoBehaviour, IInteractuable
     {
         Time.timeScale = 0f;
 
-        npcCamera.transform.SetPositionAndRotation(cameraPoint.position,cameraPoint.rotation);
-     
-        // El diálogo actual con el que trabajamos, es el que me dan por parámetro de entrada.
+        npcCamera.SetPositionAndRotation(cameraPoint.position, cameraPoint.rotation);
         dialogoActual = dialogo;
-        marcoDialogo.SetActive(true);
-        StartCoroutine (EscribirFrase());
+        marcos.SetActive(true);
+        StartCoroutine(EscribirFrase());
     }
+
+    //Que el texto aparezca letra por letra
+    private IEnumerator EscribirFrase()
+    {
+        escribiendo = true;
+        //Limpio el texto antes de poner una nueva frase.
+        textoDialogo.text = "";
+        char[] frasePorLetras = dialogoActual.frases[indiceFraseActual].ToCharArray();
+        foreach (char letra in frasePorLetras)
+        {
+            textoDialogo.text += letra;
+            yield return new WaitForSecondsRealtime(dialogoActual.tiempoEntreLetras);
+            //yield return new WaitForSeconds(dialogoActual.tiempoEntreLetras);
+        }
+        escribiendo = false;
+    }
+
     public void SiguienteFrase()
     {
-        if(escribiendo)
+        if (escribiendo)//Si estamos escribiendo una frase
         {
             CompletarFrase();
         }
         else
         {
-            indiceFraseActual ++;
-
-            // Si aun me quedan frases...
-            if(indiceFraseActual > dialogoActual.frases.Length)
+            indiceFraseActual++;//Avanzo de indice de frase
+            //Y si aun quedan frases
+            if (indiceFraseActual < dialogoActual.frases.Length)
             {
-             StartCoroutine(EscribirFrase()); // ...a escribo
+                StartCoroutine(EscribirFrase());
             }
             else
             {
-                TerminarDialogo();
+                FinalizarDialogo();// Si no quedan frases, termino y cierro dialogo
             }
+
         }
     }
+
     private void CompletarFrase()
     {
-        escribiendo = false;
         StopAllCoroutines();
         textoDialogo.text = dialogoActual.frases[indiceFraseActual];
-    }
-    private void TerminarDialogo()
-    {
-        Time.timeScale = 1f;
-        marcoDialogo.SetActive(false);
-        indiceFraseActual = 0; // Para posteriores diálogos
         escribiendo = false;
-        StopAllCoroutines();
+    }
 
-        if(dialogoActual.tieneMision)
+    private void FinalizarDialogo()
+    {
+        Time.timeScale = 1f;//Se termina la pausa.
+        marcos.SetActive(false);
+        StopAllCoroutines();
+        indiceFraseActual = 0;//Para posteriores dialogos.
+        escribiendo = false;
+        if (dialogoActual.tieneMision)
         {
-            // Comunico al Event Manager que hay una mision en este diálogo
+            //Comunico al EM que hay una mision en este dialogo.
             eventManager.NuevaMision(dialogoActual.mision);
         }
-        dialogoActual = null;
 
-
-    }
-
-    private IEnumerator EscribirFrase()
-    {
-        escribiendo = true;
-        textoDialogo.text = "";
-        char[] fraseEnLetras = dialogoActual.frases[indiceFraseActual].ToCharArray();
-        foreach (char letra in fraseEnLetras)
-        {
-            textoDialogo.text += letra;
-            yield return new WaitForSecondsRealtime(dialogoActual.tiempoEntreLetras);
-        }
-        escribiendo = false;
-    }
-
-    public void Interactuar(Transform interactuador)
-    {
-        throw new System.NotImplementedException();
+        dialogoActual = null;//Ya no tenemos ningun dialogo.
     }
 }

@@ -7,13 +7,11 @@ public class SistemaBlendTree : MonoBehaviour
 {
 
     private Animator anim;
+    private float velocidad;
     [SerializeField] private NavMeshAgent agent;
-
-
 
     private void Awake()
     {
-        //Ref a mi animator
         anim = GetComponent<Animator>();
     }
     // Start is called before the first frame update
@@ -25,7 +23,8 @@ public class SistemaBlendTree : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //todos los frames voy actualizando mi velocity en funcion de mi vel actual
-        anim.SetFloat("velocity", agent.velocity.magnitude / agent.speed);
+        velocidad = agent.velocity.magnitude / agent.speed;
+        //Durante todos los frames voy actualizando la velocidad actual
+        anim.SetFloat("Velocity", velocidad);
     }
 }

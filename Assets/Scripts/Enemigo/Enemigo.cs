@@ -3,57 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 
-public class Enemigo : MonoBehaviour, IDanhable
+public class Enemigo : MonoBehaviour
 {
     private SistemaCombate combate;
-    private SistemaPatrulla patrulla;
-
+    private SistemaPatrullla patrulla;
     private Transform mainTarget;
 
-    // acceder en otros scripts sin estar en public (encapsular)
+
+
+
     public SistemaCombate Combate { get => combate; set => combate = value; }
-    public SistemaPatrulla Patrulla { get => patrulla; set => patrulla = value; }
+    public SistemaPatrullla Patrulla { get => patrulla; set => patrulla = value; }
     public Transform MainTarget { get => mainTarget; }
 
-    [SerializeField] private int vida = 100;
-    [SerializeField] private Image imgVida;
-
-    public void Start()
+    private void Start()
     {
-        patrulla.enabled = true; // empieza juego activo patrulla
+        patrulla.enabled = true;
     }
-
-
     public void ActivaCombate(Transform target)
     {
         mainTarget = target;
-
-        combate.enabled = true; // nos dicen de activar combate
+        combate.enabled = true;
     }
 
     public void ActivarPatrulla()
     {
-        Patrulla.enabled = true;
-    }
-    public void ActualizarVida()
-    {
-        imgVida.fillAmount = vida / 100;
-    }
-    public void RecibirDanho(int danho)
-    {
-        vida -= danho;
-        if (vida <= 0)
-        {
-            Muerte();
-            vida = 0;
-        }
-        ActualizarVida();
-    }
-
-    public void Muerte()
-    {
-
+        combate.enabled = false;
+        patrulla.enabled = true;
     }
 }

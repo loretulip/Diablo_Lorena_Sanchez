@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frases:
   - "Hola aventurero, necesito que me hagas un favor...\t"
-  - "Quiero que recogas 3 setas de la sala infernal para crear una poci\xF3n. Conf\xEDo
-    en ti."
+  - "Quiero que recojas 3 setas como la que tienes en el fondo sur de esta sala para
+    crear una poci\xF3n."
+  - "Las otras dos est\xE1n repartidas por el castillo, tr\xE1emelas y te recompensar\xE9."
   tiempoEntreLetras: 0.02
   tieneMision: 1
   mision: {fileID: 11400000, guid: 5da02202d0d9cc94498eee4135ab98b5, type: 2}
